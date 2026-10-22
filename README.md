@@ -55,7 +55,7 @@ pnpm worker            # เปิดอีก terminal สำหรับ worke
 
 ## 📬 อยากได้ template + อัปเดต?
 
-กำลังรวบรวมชุด **"RSS ไทยคุณภาพ + prompt โพสต์ข่าว viral"** ส่งฟรีให้ผู้ที่ลงอีเมล → **[รับได้ที่นี่](NEWSZEED_LANDING_URL)**
+กำลังรวบรวมชุด **"RSS ไทยคุณภาพ + prompt โพสต์ข่าว viral"** ส่งฟรีให้ผู้ที่ลงอีเมล → **[รับได้ที่นี่](https://newszeed-landing.vercel.app)**
 
 ## ❓ FAQ
 

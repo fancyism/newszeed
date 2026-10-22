@@ -1,4 +1,4 @@
-import { put, head } from '@vercel/blob';
+import { put, list } from '@vercel/blob';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,16 +11,17 @@ export default async function handler(req, res) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 254) {
       return res.status(400).json({ ok: false, error: 'invalid_email' });
     }
-    const key = `leads/${Buffer.from(email).toString('base64url')}.json`;
-    const existing = await head(key).catch(() => null);
-    if (existing) return res.status(200).json({ ok: true, duplicate: true });
+    const name = Buffer.from(email).toString('base64url');
+    const prefix = `leads/${name}.`;
+    const { blobs } = await list({ prefix });
+    if (blobs.length > 0) return res.status(200).json({ ok: true, duplicate: true });
     await put(
-      key,
+      `${prefix}json`,
       JSON.stringify({ email, at: new Date().toISOString(), source: 'newszeed-landing' }),
-      { access: 'private', addRandomSuffix: false }
+      { access: 'public' }
     );
     return res.status(200).json({ ok: true, duplicate: false });
   } catch (e) {
-    return res.status(500).json({ ok: false, error: 'server_error' });
+    return res.status(500).json({ ok: false, error: 'server_error', detail: String(e && e.message ? e.message : e).slice(0, 200) });
   }
 }
