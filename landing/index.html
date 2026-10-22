@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Newszeed — หุ่นยนต์โพสต์ข่าวเข้าเพจ Facebook อัตโนมัติ (ฟรี + Open Source)</title>
+<meta name="description" content="ดึงข่าว RSS → AI เขียนโพสต์ภาษาไทย → โพสต์เข้าเพจ Facebook ของคุณอัตโนมัติ พร้อมแดชบอร์ด Analytics ฟรีและ open source">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#1c1917;background:#fffbeb;line-height:1.65}
+.wrap{max-width:720px;margin:0 auto;padding:24px 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+.logo{font-size:1.25rem;font-weight:800;color:#92400e}.logo span{color:#f59e0b}
+.gh{color:#78716c;text-decoration:none;font-size:.9rem;border:1px solid #e7e5e4;padding:6px 14px;border-radius:8px;background:#fff}
+.gh:hover{border-color:#f59e0b;color:#92400e}
+.hero{text-align:center;padding:48px 0 32px}
+.hero .bee{font-size:3rem}
+h1{font-size:clamp(1.6rem,4.5vw,2.4rem);color:#1c1917;margin:12px 0}
+h1 em{color:#b45309;font-style:normal}
+.sub{color:#57534e;font-size:1.05rem;max-width:560px;margin:0 auto}
+.gift{background:#fff;border:1px solid #fcd34d;border-radius:16px;padding:28px;margin:28px 0;box-shadow:0 1px 3px rgba(180,83,9,.08)}
+.gift h2{font-size:1.15rem;color:#92400e;margin-bottom:14px}
+.gift ul{list-style:none}
+.gift li{padding:7px 0 7px 30px;position:relative;color:#44403c}
+.gift li::before{content:"✅";position:absolute;left:0}
+form{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+input[type=email]{flex:1;min-width:220px;padding:13px 16px;border:1.5px solid #e7e5e4;border-radius:10px;font-size:1rem;background:#fffbeb}
+input[type=email]:focus{outline:none;border-color:#f59e0b}
+button{padding:13px 26px;background:#f59e0b;color:#451a03;border:none;border-radius:10px;font-size:1rem;font-weight:700;cursor:pointer}
+button:hover{background:#d97706}
+button:disabled{opacity:.6;cursor:wait}
+.msg{margin-top:12px;font-size:.95rem;display:none;padding:10px 14px;border-radius:8px}
+.msg.ok{display:block;background:#ecfdf5;color:#065f46}
+.msg.dup{display:block;background:#eff6ff;color:#1e40af}
+.msg.err{display:block;background:#fef2f2;color:#991b1b}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:8px 0 36px}
+.step{background:#fff;border:1px solid #fde68a;border-radius:12px;padding:18px}
+.step b{display:block;color:#b45309;margin-bottom:4px;font-size:.95rem}
+.step p{font-size:.9rem;color:#57534e}
+footer{text-align:center;color:#78716c;font-size:.85rem;padding:20px 0 36px;border-top:1px solid #fde68a}
+footer a{color:#b45309}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="logo">🐝 News<span>zeed</span></div>
+<a class="gh" href="https://github.com/fancyism/newszeed" target="_blank" rel="noopener">⭐ ดูโค้ดบน GitHub</a>
+</header>
+<section class="hero">
+<div class="bee">🐝📰</div>
+<h1>หุ่นยนต์โพสต์<em>ข่าวเข้าเพจ Facebook</em><br>ของคุณ อัตโนมัติ 100%</h1>
+<p class="sub">ดึงข่าวจาก RSS ที่เลือก → AI (Gemini) เขียนใหม่เป็นโพสต์ไทยสไตล์ viral → โพสต์เข้าเพจคุณเองตามคิว พร้อมแดชบอร์ดวัด Reach — <b>ฟรี + open source (MIT)</b></p>
+</section>
+<section class="gift">
+<h2>🎁 รับฟรีชุดเริ่มต้น "เพจข่าวอัตโนมัติ"</h2>
+<ul>
+<li><b>รายชื่อ RSS ข่าวไทยคุณภาพ</b> คัดมาแล้ว พร้อมใช้กับระบบทันที</li>
+<li><b>ชุด prompt เขียนโพสต์ข่าว viral</b> ภาษาไทย ปรับได้ตาม niche</li>
+<li><b>คู่มือติดตั้ง 15 นาที</b> ตั้งระบบเองได้ทั้งหมดด้วย free tier</li>
+</ul>
+<form id="f">
+<input type="email" id="e" placeholder="อีเมลของคุณ เช่น you@gmail.com" required>
+<button id="b" type="submit">ส่งของฟรีเข้าอีเมล 🚀</button>
+</form>
+<div class="msg" id="m"></div>
+</section>
+<div class="steps">
+<div class="step"><b>1️⃣ ต่อ RSS</b><p>เลือกแหล่งข่าวที่ชอบ ระบบดึงอัตโนมัติ</p></div>
+<div class="step"><b>2️⃣ AI เขียนโพสต์</b><p>Gemini เขียนใหม่เป็นภาษาไทย พร้อมแนวโพสต์ viral</p></div>
+<div class="step"><b>3️⃣ โพสต์เข้าเพจ</b><p>คิว Redis โพสต์ตรงเวลา ดู Reach ใน dashboard</p></div>
+</div>
+<footer>Newszeed เป็นโปรเจกต์ open source สัญญาอนุญาต MIT · <a href="https://github.com/fancyism/newszeed">GitHub</a><br>เราไม่ส่ง spam — ยกเลิกรับข้อมูลได้ทุกเมื่อ</footer>
+</div>
+<script>
+const f=document.getElementById('f'),e=document.getElementById('e'),b=document.getElementById('b'),m=document.getElementById('m');
+function show(t,c){m.textContent=t;m.className='msg '+c}
+f.addEventListener('submit',async ev=>{ev.preventDefault();b.disabled=true;b.textContent='กำลังส่ง...';
+try{const r=await fetch('/api/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e.value})});
+const d=await r.json().catch(()=>({}));
+if(r.ok&&d.ok){show(d.duplicate?'อีเมลนี้ลงทะเบียนแล้วนะครับ — ของฟรีกำลังจะถูกส่งไปให้ 📬':'สำเร็จ! ของฟรีจะส่งเข้าอีเมลของคุณเร็วๆ นี้ 🎉',d.duplicate?'dup':'ok');e.value=''}
+else if(d.error==='invalid_email'){show('รูปแบบอีเมลไม่ถูกต้อง ลองตรวจอีกครั้งครับ','err')}
+else{show('มีบางอย่างผิดพลาด ลองอีกครั้ง หรือติดต่อผ่าน GitHub','err')}}
+catch(_){show('เชื่อมต่อไม่สำเร็จ ลองอีกครั้งครับ','err')}
+b.disabled=false;b.textContent='ส่งของฟรีเข้าอีเมล 🚀'});
+</script>
+</body>
+</html>
