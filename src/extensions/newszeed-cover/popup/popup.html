@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=400, initial-scale=1.0">
+  <title>Newszeed Cover Generator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header with tabs -->
+    <header class="header">
+      <nav class="tabs">
+        <button class="tab active" data-tab="ai-cover">
+          <span class="tab-icon">🤖</span>
+          AI Cover (Gemini)
+        </button>
+        <button class="tab" data-tab="grid-creator">
+          <span class="tab-icon">🧩</span>
+          Grid Creator
+        </button>
+      </nav>
+    </header>
+
+    <!-- Tab Content: AI Cover -->
+    <main class="content" id="ai-cover-content">
+      <!-- Hero Banner -->
+      <section class="hero-banner">
+        <div class="hero-icon">🎨</div>
+        <h1 class="hero-title">Auto Cover Generator</h1>
+        <p class="hero-subtitle">สร้างหน้าปกข่าวด้วย Gemini AI</p>
+      </section>
+
+      <!-- Settings -->
+      <section class="card settings-card">
+        <h2 class="card-title">
+          <span class="icon">⚙️</span>
+          การตั้งค่า
+        </h2>
+        <label class="toggle-row" data-tooltip="เมื่อเปิดใช้งาน รูปที่ Gen เสร็จจะถูกดาวน์โหลดทันที">
+          <span class="toggle-label">ดาวน์โหลดรูปภาพอัตโนมัติ (Auto Download)</span>
+          <input type="checkbox" id="auto-download" checked>
+          <span class="toggle-switch"></span>
+        </label>
+      </section>
+
+      <!-- Image Upload -->
+      <section class="card upload-card">
+        <h2 class="card-title">
+          <span class="icon">🖼️</span>
+          เพิ่มรูปภาพ <span class="badge">สูงสุด 10 รูป</span>
+        </h2>
+        <div class="upload-zone" id="upload-zone" data-tooltip="ลากไฟล์มาวางหรือคลิกเพื่อเลือกรูปภาพ">
+          <input type="file" id="file-input" multiple accept="image/*" hidden>
+          <div class="upload-placeholder">
+            <span class="upload-icon">➕</span>
+            <span class="upload-text">ลาก หรือ คลิก</span>
+          </div>
+        </div>
+        <div class="image-previews" id="image-previews"></div>
+        <div class="upload-count"><span id="image-count">0</span> ภาพ</div>
+      </section>
+
+      <!-- Category Selector -->
+      <section class="card category-card">
+        <h2 class="card-title">
+          <span class="icon">🎭</span>
+          เลือกสไตล์ปก
+        </h2>
+        <div class="category-grid" id="category-grid">
+          <button class="category-btn active" data-category="politics" data-tooltip="ข่าวการเมืองระหว่างประเทศ ผู้นำโลก">
+            <span class="category-icon">🏛️</span>
+            <span class="category-name">ข่าวการเมือง</span>
+            <span class="category-sub">Political</span>
+          </button>
+          <button class="category-btn" data-category="breaking" data-tooltip="ข่าวด่วน เหตุการณ์เร่งด่วน">
+            <span class="category-icon">🔴</span>
+            <span class="category-name">ข่าวด่วน</span>
+            <span class="category-sub">Breaking News</span>
+          </button>
+          <button class="category-btn" data-category="finance" data-tooltip="ข่าวการเงิน หุ้น ค่าเงิน">
+            <span class="category-icon">📈</span>
+            <span class="category-name">การเงิน</span>
+            <span class="category-sub">Finance</span>
+          </button>
+          <button class="category-btn" data-category="football" data-tooltip="ข่าวฟุตบอล ลีกดัง ผลการแข่งขัน">
+            <span class="category-icon">⚽</span>
+            <span class="category-name">ฟุตบอล</span>
+            <span class="category-sub">Football</span>
+          </button>
+          <button class="category-btn" data-category="transfer" data-tooltip="ข่าวย้ายทีม HERE WE GO! สไตล์ Fabrizio">
+            <span class="category-icon">✅</span>
+            <span class="category-name">ข่าวย้ายทีม</span>
+            <span class="category-sub">Transfer</span>
+          </button>
+          <button class="category-btn" data-category="drama" data-tooltip="ข่าวดราม่า โซเชียล">
+            <span class="category-icon">🎭</span>
+            <span class="category-name">ดราม่า</span>
+            <span class="category-sub">Drama</span>
+          </button>
+          <button class="category-btn" data-category="honkrasae" data-tooltip="โหนกระแส รายการทีวี">
+            <span class="category-icon">📺</span>
+            <span class="category-name">โหนกระแส</span>
+            <span class="category-sub">TV Show</span>
+          </button>
+          <button class="category-btn" data-category="esports" data-tooltip="YouTube, Esports, Gaming">
+            <span class="category-icon">🎮</span>
+            <span class="category-name">Esports</span>
+            <span class="category-sub">Gaming</span>
+          </button>
+          <button class="category-btn" data-category="health" data-tooltip="ข่าวสุขภาพ วิจัยใหม่">
+            <span class="category-icon">🧬</span>
+            <span class="category-name">สุขภาพ</span>
+            <span class="category-sub">Health</span>
+          </button>
+          <button class="category-btn" data-category="celebrity" data-tooltip="ข่าวดารา บันเทิง">
+            <span class="category-icon">⭐</span>
+            <span class="category-name">ดารา</span>
+            <span class="category-sub">Celebrity</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Text Overlay -->
+      <section class="card text-card">
+        <h2 class="card-title">
+          <span class="icon">✏️</span>
+          ปรับแต่งตัวหนังสือ
+        </h2>
+        
+        <label class="toggle-row" data-tooltip="เปิด/ปิดการแสดงข้อความบนหน้าปก">
+          <input type="checkbox" id="show-text" checked>
+          <span class="toggle-switch"></span>
+          <span class="toggle-label">ใส่ข้อความในหน้าปก</span>
+        </label>
+
+        <div class="text-config" id="text-config">
+          <div class="form-group">
+            <label class="form-label">หัวข้อข่าว / ข้อความ</label>
+            <textarea id="headline-input" class="textarea" rows="3" 
+              placeholder="ไทยขยับ! จี้สหรัฐฯ-เวเนฯ &quot;คุยดีๆ&quot;&#10;ขอสันติวิธี! กต. ออกแถลงการณ์"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">ตำแหน่งตัวหนังสือ</label>
+            <div class="position-grid" id="position-grid">
+              <button class="position-btn" data-position="top-left" data-tooltip="บนซ้าย">บนซ้าย</button>
+              <button class="position-btn" data-position="top" data-tooltip="บน">บน</button>
+              <button class="position-btn" data-position="top-right" data-tooltip="บนขวา">บนขวา</button>
+              <button class="position-btn" data-position="left" data-tooltip="ซ้าย">ซ้าย</button>
+              <button class="position-btn" data-position="center" data-tooltip="กลาง">กลาง</button>
+              <button class="position-btn" data-position="right" data-tooltip="ขวา">ขวา</button>
+              <button class="position-btn" data-position="bottom-left" data-tooltip="ล่างซ้าย">ล่างซ้าย</button>
+              <button class="position-btn active" data-position="bottom" data-tooltip="ล่าง">ล่าง</button>
+              <button class="position-btn" data-position="bottom-right" data-tooltip="ล่างขวา">ล่างขวา</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">สไตล์ฟอนต์ <span class="hint">(เลือกได้มากกว่า 1)</span></label>
+            <div class="font-grid" id="font-grid">
+              <button class="font-btn active" data-font="3d" data-tooltip="ตัวอักษร 3 มิติ">3D</button>
+              <button class="font-btn" data-font="thai-bold" data-tooltip="ข่าวไทยมีหัว">ข่าวไทยมีหัว</button>
+              <button class="font-btn" data-font="bold" data-tooltip="ตัวหนา">ตัวหนา</button>
+              <button class="font-btn" data-font="thin" data-tooltip="ตัวบาง">ตัวบาง</button>
+              <button class="font-btn" data-font="italic" data-tooltip="ตัวเอียง">ตัวเอียง</button>
+              <button class="font-btn" data-font="news-thai" data-tooltip="ฟอนต์ข่าวไทย">ฟอนต์ข่าวไทย</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Aspect Ratio -->
+      <section class="card aspect-card">
+        <h2 class="card-title">
+          <span class="icon">📐</span>
+          ขนาดหน้าปก
+        </h2>
+        <div class="aspect-grid" id="aspect-grid">
+          <button class="aspect-btn active" data-aspect="1:1" data-tooltip="สี่เหลี่ยมจัตุรัส - Instagram">
+            <span class="aspect-preview square"></span>
+            <span class="aspect-label">1:1</span>
+          </button>
+          <button class="aspect-btn" data-aspect="4:5" data-tooltip="Instagram Portrait">
+            <span class="aspect-preview portrait-45"></span>
+            <span class="aspect-label">4:5</span>
+          </button>
+          <button class="aspect-btn" data-aspect="3:4" data-tooltip="Portrait">
+            <span class="aspect-preview portrait-34"></span>
+            <span class="aspect-label">3:4</span>
+          </button>
+          <button class="aspect-btn" data-aspect="4:3" data-tooltip="Landscape">
+            <span class="aspect-preview landscape-43"></span>
+            <span class="aspect-label">4:3</span>
+          </button>
+          <button class="aspect-btn" data-aspect="2:3" data-tooltip="Portrait Tall">
+            <span class="aspect-preview portrait-23"></span>
+            <span class="aspect-label">2:3</span>
+          </button>
+          <button class="aspect-btn" data-aspect="9:16" data-tooltip="Story / Reels">
+            <span class="aspect-preview portrait-916"></span>
+            <span class="aspect-label">9:16</span>
+          </button>
+          <button class="aspect-btn" data-aspect="16:9" data-tooltip="YouTube Thumbnail">
+            <span class="aspect-preview landscape-169"></span>
+            <span class="aspect-label">16:9</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Mood Selector -->
+      <section class="card mood-card">
+        <h2 class="card-title">
+          <span class="icon">😊</span>
+          อารมณ์ของตัวแบบ
+        </h2>
+        <div class="mood-grid" id="mood-grid">
+          <button class="mood-btn active" data-mood="none" data-tooltip="ไม่ระบุอารมณ์">
+            <span class="mood-icon">🚫</span>
+            <span class="mood-label">ไม่ใส่</span>
+          </button>
+          <button class="mood-btn" data-mood="smile" data-tooltip="ยิ้มแย้ม">
+            <span class="mood-icon">😊</span>
+            <span class="mood-label">ยิ้มแย้ม</span>
+          </button>
+          <button class="mood-btn" data-mood="serious" data-tooltip="จริงจัง">
+            <span class="mood-icon">😐</span>
+            <span class="mood-label">จริงจัง</span>
+          </button>
+          <button class="mood-btn" data-mood="sad" data-tooltip="เศร้า">
+            <span class="mood-icon">😢</span>
+            <span class="mood-label">เศร้า</span>
+          </button>
+          <button class="mood-btn" data-mood="angry" data-tooltip="โกรธ">
+            <span class="mood-icon">😠</span>
+            <span class="mood-label">โกรธ</span>
+          </button>
+          <button class="mood-btn" data-mood="shocked" data-tooltip="ตกใจ">
+            <span class="mood-icon">😱</span>
+            <span class="mood-label">ตกใจ</span>
+          </button>
+          <button class="mood-btn" data-mood="confident" data-tooltip="มั่นใจ">
+            <span class="mood-icon">😎</span>
+            <span class="mood-label">มั่นใจ</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Presets -->
+      <section class="card preset-card">
+        <h2 class="card-title">
+          <span class="icon">💾</span>
+          บันทึกการตั้งค่า (Presets)
+        </h2>
+        <div class="preset-form">
+          <input type="text" id="preset-name" class="input" placeholder="ตั้งชื่อ Preset...">
+          <button class="btn btn-secondary" id="save-preset-btn" data-tooltip="บันทึกการตั้งค่าปัจจุบัน">
+            บันทึกการตั้งค่า
+          </button>
+        </div>
+        <div class="preset-list" id="preset-list">
+          <!-- Presets will be loaded here -->
+        </div>
+      </section>
+
+      <!-- Queue Status -->
+      <section class="card queue-card" id="queue-card">
+        <h2 class="card-title">
+          <span class="icon">📊</span>
+          คิวการทำงาน
+        </h2>
+        <div class="queue-stats">
+          <div class="queue-stat" data-tooltip="จำนวนงานที่รอดำเนินการ">
+            <span class="stat-value" id="queue-pending">0</span>
+            <span class="stat-label">รอคิว</span>
+          </div>
+          <div class="queue-stat" data-tooltip="จำนวนงานที่กำลังดำเนินการ">
+            <span class="stat-value" id="queue-processing">0</span>
+            <span class="stat-label">กำลังทำ</span>
+          </div>
+          <div class="queue-stat" data-tooltip="จำนวนงานที่สำเร็จ">
+            <span class="stat-value" id="queue-completed">0</span>
+            <span class="stat-label">สำเร็จ</span>
+          </div>
+          <div class="queue-stat" data-tooltip="จำนวนงานที่ล้มเหลว">
+            <span class="stat-value" id="queue-failed">0</span>
+            <span class="stat-label">ล้มเหลว</span>
+          </div>
+        </div>
+        <div class="queue-progress" id="queue-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+          </div>
+          <span class="progress-text" id="progress-text">ว่าง</span>
+        </div>
+        <div class="queue-list" id="queue-list">
+          <!-- Queue items will be rendered here -->
+        </div>
+      </section>
+
+      <!-- Generate Button -->
+      <div class="generate-section">
+        <button class="btn btn-primary btn-generate" id="generate-btn" data-tooltip="เพิ่มงานเข้าคิวและเริ่มสร้างหน้าปก">
+          <span class="btn-icon">➕</span>
+          สร้างหน้าปก
+        </button>
+      </div>
+    </main>
+
+    <!-- Tab Content: Grid Creator -->
+    <main class="content hidden" id="grid-creator-content">
+      <section class="hero-banner hero-grid">
+        <div class="hero-icon">🧩</div>
+        <h1 class="hero-title">Grid Creator</h1>
+        <p class="hero-subtitle">รวมภาพหลายช่องในสไตล์คุณ</p>
+      </section>
+
+      <section class="card upload-card">
+        <div class="upload-zone" id="grid-upload-zone">
+          <input type="file" id="grid-file-input" multiple accept="image/*" hidden>
+          <div class="upload-placeholder">
+            <span class="upload-icon">➕</span>
+            <span class="upload-text">เพิ่มรูปภาพ</span>
+            <span class="upload-hint">ลาก หรือ คลิก</span>
+          </div>
+        </div>
+        <div class="upload-count"><span id="grid-image-count">0</span> ภาพ</div>
+      </section>
+
+      <section class="card">
+        <h2 class="card-title">Layout</h2>
+        <div class="layout-grid" id="layout-grid">
+          <button class="layout-btn active" data-layout="3" data-tooltip="3 ภาพ">
+            <div class="layout-preview layout-3"></div>
+            <span>3 ภาพ</span>
+          </button>
+          <button class="layout-btn" data-layout="5" data-tooltip="5 ภาพ">
+            <div class="layout-preview layout-5"></div>
+            <span>5 ภาพ</span>
+          </button>
+          <button class="layout-btn" data-layout="4" data-tooltip="4 ภาพ">
+            <div class="layout-preview layout-4"></div>
+            <span>4 ภาพ</span>
+          </button>
+          <button class="layout-btn" data-layout="6" data-tooltip="6 ภาพ">
+            <div class="layout-preview layout-6"></div>
+            <span>6 ภาพ</span>
+          </button>
+        </div>
+      </section>
+
+      <div class="generate-section">
+        <button class="btn btn-primary btn-generate" id="create-grid-btn">
+          <span class="btn-icon">🧩</span>
+          สร้าง Grid
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

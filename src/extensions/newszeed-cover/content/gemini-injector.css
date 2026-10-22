@@ -1,0 +1,111 @@
+/**
+ * Newszeed Cover Generator - Gemini Injector Styles
+ * Visual feedback styles injected into Gemini page
+ */
+
+/* Processing Overlay */
+#newszeed-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(24, 1, 6, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.newszeed-processing {
+    background: linear-gradient(135deg, #feecf0 0%, #fff 100%);
+    padding: 24px 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(247, 24, 79, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid rgba(247, 24, 79, 0.2);
+}
+
+.newszeed-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid #feecf0;
+    border-top-color: #f7184f;
+    border-radius: 50%;
+    animation: newszeed-spin 1s linear infinite;
+}
+
+.newszeed-text {
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px;
+    color: #180106;
+    font-weight: 500;
+}
+
+@keyframes newszeed-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success Toast */
+.newszeed-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: linear-gradient(135deg, #75fa9f 0%, #3bdbf7 100%);
+    color: #180106;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    z-index: 99999;
+    font-family: 'Noto Sans Thai', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    animation: newszeed-slide-in 0.3s ease-out;
+}
+
+@keyframes newszeed-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Error Toast */
+.newszeed-toast-error {
+    background: linear-gradient(135deg, #f7184f 0%, #ff4d73 100%);
+    color: white;
+}
+
+/* Highlight injected elements */
+.newszeed-highlight {
+    outline: 2px solid #f7184f !important;
+    outline-offset: 2px;
+    animation: newszeed-pulse 1s ease-in-out infinite;
+}
+
+@keyframes newszeed-pulse {
+
+    0%,
+    100% {
+        outline-color: rgba(247, 24, 79, 1);
+    }
+
+    50% {
+        outline-color: rgba(247, 24, 79, 0.3);
+    }
+}

@@ -1,0 +1,45 @@
+# dependencies
+node_modules/
+.pnp
+.github/agents/
+.pnp.js
+
+# build
+.next/
+out/
+build/
+dist/
+
+# env — ห้าม commit เด็ดขาด
+.env
+.env.*
+!.env.example
+
+# internal tooling / editor (ไม่จำเป็นสำหรับ public)
+.agent/
+.agentvibes/
+.claude/
+.cursor/
+.gemini/
+.kilocode/
+.kilocodemodes
+.mcp.json
+.opencode/
+.trae/
+.vscode/
+_bmad/
+_bmad-output/
+mcp-redis/
+src/agent-docs/
+
+# misc
+*.log
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-store/
+venv/
+.venv/
+__pycache__/

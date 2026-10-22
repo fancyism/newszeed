@@ -1,0 +1,6 @@
+
+User-agent: *
+Disallow: /auth/
+Allow: /
+
+Sitemap: https://newszeed.app/sitemap.xml

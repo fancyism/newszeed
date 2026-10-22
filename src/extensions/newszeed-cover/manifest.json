@@ -1,0 +1,59 @@
+{
+    "manifest_version": 3,
+    "name": "Newszeed Cover Generator",
+    "version": "1.0.0",
+    "description": "AI-powered news cover generator using Gemini. Create stunning news covers with batch processing support.",
+    "author": "Revoks Lab",
+    "homepage_url": "https://newszeed.app",
+    "icons": {
+        "16": "assets/icons/icon-16.png",
+        "32": "assets/icons/icon-32.png",
+        "48": "assets/icons/icon-48.png",
+        "128": "assets/icons/icon-128.png"
+    },
+    "action": {
+        "default_popup": "popup/popup.html",
+        "default_icon": {
+            "16": "assets/icons/icon-16.png",
+            "32": "assets/icons/icon-32.png",
+            "48": "assets/icons/icon-48.png"
+        },
+        "default_title": "Newszeed Cover Generator"
+    },
+    "permissions": [
+        "activeTab",
+        "storage",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://gemini.google.com/*"
+    ],
+    "background": {
+        "service_worker": "background/service-worker.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://gemini.google.com/*"
+            ],
+            "js": [
+                "content/gemini-injector.js"
+            ],
+            "css": [
+                "content/gemini-injector.css"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "assets/*"
+            ],
+            "matches": [
+                "https://gemini.google.com/*"
+            ]
+        }
+    ]
+}

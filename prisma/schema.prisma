@@ -1,0 +1,135 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// User & Auth (Managed by Supabase Auth, but synced here for relations)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  fbPages   FBPage[]
+  posts     Post[]
+  feeds     RSSFeed[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Facebook Page Connection
+model FBPage {
+  id          String   @id @default(uuid())
+  pageId      String   @unique // Facebook Page ID
+  pageName    String
+  accessToken String   // Page Access Token
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts       Post[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// News Content / Post
+model Post {
+  id          String      @id @default(uuid())
+  category    String      // Politics, Finance, etc.
+  headline    String
+  content     String      @db.Text
+  summary     String?     @db.Text // AI Generated Summary
+  
+  // Media
+  coverUrl    String?
+  images      String[]    // Array of image URLs
+  
+  // Meta
+  status      PostStatus  @default(DRAFT)
+  source      String?     // RSS URL or 'manual'
+  sourceUrl   String?     // Original link
+  
+  // Scheduling
+  scheduledAt DateTime?
+  publishedAt DateTime?
+  fbPostId    String?     // Returned from FB Graph API
+  
+  // Relations
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+  pageId      String?
+  page        FBPage?     @relation(fields: [pageId], references: [id])
+  metrics     PostMetric?
+  
+  // Niche Analysis
+  tags        String[]
+  nicheScore  Float?      // How relevant to niche
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+enum PostStatus {
+  DRAFT
+  QUEUED      // Waiting for approval/schedule
+  SCHEDULED   // In Redis queue
+  PUBLISHING  // Processing
+  PUBLISHED   // Done
+  FAILED      // Error
+}
+
+// Analytics Metrics
+model PostMetric {
+  id          String   @id @default(uuid())
+  postId      String   @unique
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  // FB Real Metrics
+  reach       Int      @default(0)
+  impressions Int      @default(0)
+  engagements Int      @default(0) // Reactions + Comments + Shares + Clicks
+  
+  shares      Int      @default(0)
+  comments    Int      @default(0)
+  reactions   Int      @default(0) // Likes, Loves, etc.
+  clicks      Int      @default(0)
+  
+  // Financial Estimation
+  revenue          Decimal  @default(0) @db.Decimal(10,2) // Estimated based on RPM
+  conversionValue  Decimal  @default(0) @db.Decimal(10,2) // Actual sales (if tracked)
+  
+  fetchedAt   DateTime @default(now())
+}
+
+// Source Management
+model RSSFeed {
+  id        String   @id @default(uuid())
+  name      String
+  url       String   @unique
+  category  String
+  isActive  Boolean  @default(true)
+  lastFetch DateTime?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+// System Logs / Queue Jobs
+model JobLog {
+  id        String   @id @default(uuid())
+  jobId     String
+  type      String   // 'GENERATE_CONTENT', 'PUBLISH_POST', 'FETCH_METRICS'
+  status    String   // 'COMPLETED', 'FAILED'
+  message   String?
+  createdAt DateTime @default(now())
+}
